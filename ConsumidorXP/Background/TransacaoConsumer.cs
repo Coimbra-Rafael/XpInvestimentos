@@ -17,7 +17,11 @@ public class TransacaoConsumer: BackgroundService
         var connection = await factory.CreateConnectionAsync(stoppingToken);
         var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
-        await channel.QueueDeclareAsync(queue: "transacoes", durable: true, exclusive: false, autoDelete: false, cancellationToken: stoppingToken);
+        await channel.QueueDeclareAsync(queue: "transacoes", 
+            durable: true, 
+            exclusive: false, 
+            autoDelete: false, 
+            cancellationToken: stoppingToken);
 
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
@@ -29,7 +33,10 @@ public class TransacaoConsumer: BackgroundService
             await channel.BasicAckAsync(ea.DeliveryTag, false, stoppingToken);
         };
 
-        await channel.BasicConsumeAsync(queue: "transacoes", autoAck: false, consumer: consumer, cancellationToken: stoppingToken);
+        await channel.BasicConsumeAsync(queue: "transacoes", 
+            autoAck: false, 
+            consumer: consumer, 
+            cancellationToken: stoppingToken);
         
         await Task.Delay(Timeout.Infinite, stoppingToken);
     }
