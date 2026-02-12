@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="compose.yaml" />
+  </Folder>
+  <Project Path="ConsumidorXP/ConsumidorXP.csproj" />
+  <Project Path="ProdutorXP/ProdutorXP.csproj" />
+</Solution>

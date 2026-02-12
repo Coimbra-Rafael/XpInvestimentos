@@ -1,0 +1,36 @@
+﻿services:
+  server:
+    image: mcr.microsoft.com/mssql/server:2022-latest  # Versão recente do SQL Server para Docker
+    container_name: xp_sqlserver
+    environment:
+      - ACCEPT_EULA=Y  # Aceita os termos de licença
+      - SA_PASSWORD=YourStrongPassword123!  # Defina uma senha forte para o usuário SA (mude isso em produção)
+      - MSSQL_PID=Developer  # Modo Developer para uso local
+    ports:
+      - "1433:1433"  # Expoe a porta padrão do SQL Server
+    volumes:
+      - sqlserver-data:/var/opt/mssql  # Persistência de dados
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrongPassword123!", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 10
+
+  RabbitMQ:
+    image: rabbitmq:3-management  # Imagem com Management UI ativada
+    container_name: xp_rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest  # Usuário padrão (mude em produção)
+      - RABBITMQ_DEFAULT_PASS=guest  # Senha padrão (mude em produção)
+    ports:
+      - "5672:5672"  # Porta para AMQP (conexão do código)
+      - "15672:15672"  # Porta para Management UI (acesso via browser: http://localhost:15672)
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq  # Persistência de dados
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 10
+
+volumes:
+  sqlserver-data:
+  rabbitmq-data:
